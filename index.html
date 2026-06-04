@@ -1,0 +1,40 @@
+<head><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+
+<body>
+    <div>
+        <span>Chat</span>
+        <input class="form-control" id="inputText" type="text" placeholder="Напишите что-нибудь" aria-label=".form-control-lg example">
+        <button class="btn btn-primary" id="btnSend">Send</button>
+    </div>
+
+    <div class="container">
+        <ul id="messages">
+
+        </ul>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        const socket = io('http://localhost:8000');
+        const buttonSend = document.querySelector('#btnSend');
+        const chat = document.querySelector('#messages');
+        const inputText = document.querySelector('#inputText');
+
+        socket.on('connect', () => {
+            
+        });
+        function sendMessage(){
+            let text = inputText.value;
+            socket.emit("sendMessage", {data: `${text}`});
+        }
+
+        socket.on("newMessage", (dataFromClients) => {
+            chat.innerHTML += `<li>${dataFromClients}</li>`
+        })
+
+        buttonSend.addEventListener('click', sendMessage)
+
+    </script>
+</body>
+
