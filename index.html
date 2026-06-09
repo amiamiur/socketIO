@@ -1,4 +1,15 @@
 <head><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <style>
+            #my_message{
+                background-color:blueviolet;
+                border-radius: 5px;
+            }
+            #our_message{
+                background-color:rgb(120, 170, 91);
+                border-radius: 5px;
+            }
+        </style>
+
 </head>
 
 <body>
@@ -26,11 +37,17 @@
         });
         function sendMessage(){
             let text = inputText.value;
-            socket.emit("sendMessage", {data: `${text}`});
+            socket.emit("sendMessage", {data: `${text}`, socket_id: socket.id});
         }
 
         socket.on("newMessage", (dataFromClients) => {
-            chat.innerHTML += `<li>${dataFromClients}</li>`
+            if (socket.id === dataFromClients.id){
+                chat.innerHTML += `<li id="my_message">${dataFromClients.text}</li>`
+            }
+            else{
+                chat.innerHTML += `<li id="our_message">${dataFromClients.text}</li>`
+            }
+            
         })
 
         buttonSend.addEventListener('click', sendMessage)
